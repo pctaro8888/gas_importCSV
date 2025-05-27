@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <h3>CSVアップロード</h3>
+    <input type="file" id="csvFile" accept=".csv" />
+    <button onclick="upload()">アップロード</button>
+
+    <script>
+      function upload() {
+        const file = document.getElementById('csvFile').files[0];
+        if (!file) return alert('ファイルを選択してください');
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          const csvText = e.target.result;
+          google.script.run.withSuccessHandler(function (msg) {
+            alert(msg);
+          }).uploadCSV(csvText);
+        };
+        reader.readAsText(file, "UTF-8");
+      }
+    </script>
+  </body>
+</html>
