@@ -1,0 +1,29 @@
+//-----------------------------------------------------------
+// 機能名　：SS書込.gs
+// 機能概要：WEB画面からCSVをアップロードする
+// 引数  　：なし
+// 作成日　：2025.05.22
+//-----------------------------------------------------------
+// Webアプリとしてアクセスされたときに実行される関数
+// 'form.html' という名前のHTMLファイルを読み込んで表示
+function doGet() {
+  return HtmlService.createHtmlOutputFromFile('form');
+}
+
+// クライアント（ブラウザ）から送られてきたCSV文字列を受け取り、スプレッドシートに書き込む関数
+function uploadCSV(csvText) {
+  // CSV形式の文字列を2次元配列に変換（カンマ区切りで分割）
+  const data = Utilities.parseCsv(csvText);
+
+  // 現在のスプレッドシートのアクティブなシートを取得
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+
+  // 既存のデータをすべてクリア（必要なければコメントアウト可）
+  sheet.clearContents();
+
+  // CSVデータをシートに一括で書き込む（A1セルから）
+  sheet.getRange(1, 1, data.length, data[0].length).setValues(data);
+
+  // クライアント側に返すメッセージ
+  return "アップロード完了";
+}
