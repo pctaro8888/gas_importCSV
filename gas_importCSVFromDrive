@@ -1,0 +1,25 @@
+//-----------------------------------------------------------
+// 機能名　：SS書込.gs
+// 機能概要：WEB画面からアップロードしたCSVをSSに書き込み
+// 引数  　：なし
+// 作成日　：2025.05.22
+//-----------------------------------------------------------
+function gas_importCSVFromDrive() {
+  // CSVファイルのファイルID（Google Drive上のファイルIDを指定）
+  const fileId = '1Sr5ogBpqZw5aZILINEVWWtS_zgcwsPIM';
+
+  // 指定したファイルIDのファイルを取得
+  const file = DriveApp.getFileById(fileId);
+
+  // ファイルの中身をUTF-8で文字列として取得し、CSV形式として配列に変換
+  const csvData = Utilities.parseCsv(file.getBlob().getDataAsString("UTF-8"));
+
+  // 現在アクティブなスプレッドシートのアクティブシートを取得
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+
+  // 既存のシート内容を全消去（必要に応じてコメントアウト可能）
+  sheet.clearContents();
+
+  // 取得したCSVデータをシートのA1から書き込む（行数 x 列数の範囲を指定）
+  sheet.getRange(1, 1, csvData.length, csvData[0].length).setValues(csvData);
+}
